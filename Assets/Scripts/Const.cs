@@ -7,6 +7,6 @@ class Const
 {
     public const int MAX_COLUMN_COUNT = 10;
     public const int MAX_ROW_COUNT = 20;
-    public const float BRICK_OFFSET = 0.64f;
+    public const float BRICK_SIZE = 0.64f;
 }
 

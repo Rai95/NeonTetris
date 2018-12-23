@@ -4,11 +4,18 @@ using UnityEngine;
 
 public class TetrisManager : MonoBehaviour {
 
+    /// <summary>
+    /// 保存所有Brick的二维list
+    /// </summary>
     private List<List<Brick>> tile = new List<List<Brick>>();
+    /// <summary>
+    /// Brick在场景中的从属节点
+    /// </summary>
+    [SerializeField] private Transform tileTrans;
 
     private void Awake()
     {
-
+        InitBrick();
     }
 
     // Use this for initialization
@@ -25,16 +32,27 @@ public class TetrisManager : MonoBehaviour {
     {
 
     }
-
+    /// <summary>
+    /// 初始化场景中所需要的所有Brick
+    /// </summary>
     private void InitBrick()
     {
-        for(int i=0;i<Const.MAX_COLUMN_COUNT;i++)
+        float startPosX = -(Const.BRICK_SIZE * Const.MAX_COLUMN_COUNT / 2 - Const.BRICK_SIZE / 2);
+        float startPosY = -(Const.BRICK_SIZE * Const.MAX_ROW_COUNT / 2 - Const.BRICK_SIZE / 2);
+        GameObject BrickPref = Resources.Load<GameObject>("Bricks/Brick");
+
+        for (int i=0;i<Const.MAX_COLUMN_COUNT;i++)
         {
             List<Brick> row = new List<Brick>();
             for(int j=0;j<Const.MAX_ROW_COUNT;j++)
             {
-                Brick b = new Brick();
-                row.Add(b);
+                GameObject tmpBrick = Instantiate(BrickPref, tileTrans);
+                if (tmpBrick != null)
+                {
+                    Brick b = tmpBrick.GetComponent<Brick>();
+                    b.CreateBrick(startPosX + Const.BRICK_SIZE * i, startPosY + Const.BRICK_SIZE * j, new Color(1.0F, 1.0F, 1.0F), true);
+                    row.Add(b);
+                }
             }
             tile.Add(row);
         }
