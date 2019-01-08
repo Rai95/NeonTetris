@@ -1,23 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public struct PosPair
-{
-    public float posX;
-    public float posY;
-
-    public PosPair(float x,float y)
-    {
-        posX = x;
-        posY = y;
-    }
-}
+using NeonTetris.Common;
 
 /// <summary>
 /// 组成俄罗斯方块矩阵的基本元素，在矩阵被初始化的时候就直接在场景中生成了，在之后的游戏过程中也不再被销毁
 /// </summary>
 public class Brick : MonoBehaviour {
+    /// <summary>
+    /// 砖块的颜色
+    /// </summary>
     public Color BrickColor
     {
         set
@@ -27,7 +19,9 @@ public class Brick : MonoBehaviour {
             else { mat.color = Color.white; }
         }
     }
-
+    /// <summary>
+    /// 砖块的位置
+    /// </summary>
     public PosPair Pos
     {
         set
