@@ -24,7 +24,7 @@ public class TetrisManager : MonoBehaviour {
     /// <summary>
     /// 当前的活动块
     /// </summary>
-    private Tetris activeTetris;
+    private TetrisBase activeTetris;
 
     private void Awake()
     {

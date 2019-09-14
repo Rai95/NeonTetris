@@ -21,12 +21,18 @@ namespace NeonTetris.Common
         Right = 3,
     }
 
-    public struct PosPair
+    public enum BrickState
+    {
+        Active=0,
+        Static=1
+    }
+
+    public struct Pos
     {
         public float posX;
         public float posY;
 
-        public PosPair(float x, float y)
+        public Pos(float x, float y)
         {
             posX = x;
             posY = y;
