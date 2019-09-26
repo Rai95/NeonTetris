@@ -1,42 +1,53 @@
 ﻿using NeonTetris.Common;
+using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 表示一块俄罗斯方块的类
-/// </summary>
-public class TetrisBase : MonoBehaviour
+public abstract class TetrisBase
 {
-
-    /// <summary>
-    /// 方块的中心砖块
-    /// </summary>
-    private Brick centerBrick;
-    /// <summary>
-    /// 中心砖块的位置，也代表整个方块的位置
-    /// </summary>
-    private Pos pos;
-    /// <summary>
-    /// 附属的砖块，位置由中心砖块位置和自身偏移量决定
-    /// </summary>
-    private Brick[] subBricks;
-    /// <summary>
-    /// 附属砖块相对于中心砖块的位置偏移量
-    /// </summary>
-    private Pos[] subOffset;
-    /// <summary>
-    /// 方块现在的朝向
-    /// </summary>
-    private Direction facing;
-
-    // Use this for initialization
-    void Start()
+    private Position pos = new Position(0, 0);
+    public Position Pos
     {
-
+        get { return pos; }
     }
 
-    // Update is called once per frame
-    void Update()
+    private Direction dir = Direction.Up;
+    public Direction Dir
     {
-
+        get { return dir; }
     }
+
+    private Color brickColor = Color.white;
+    public Color BrickColor
+    {
+        get { return brickColor; }
+    }
+
+    public TetrisBase(Position p, Direction d)
+    {
+        pos = p;
+        dir = d;
+    }
+
+    public abstract IEnumerator<Position> GetPosList();
+
+    public void Move(Direction d)
+    {
+        switch (d)
+        {
+            case Direction.Up: { break; }
+            case Direction.Left: { pos.x -= 1; break; }
+            case Direction.Down: { pos.y -= 1; break; }
+            case Direction.Right: { pos.x += 1; break; }
+        }
+    }
+
+    public void Rotate(Direction d)
+    {
+        switch (d)
+        {
+            case Direction.Left: { dir = dir - 1 < Direction.Up ? Direction.Right : dir - 1; break; }
+            case Direction.Right: { dir = dir + 1 > Direction.Right ? Direction.Up : dir + 1; break; }
+        }
+    }
+
 }

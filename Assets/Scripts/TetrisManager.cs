@@ -1,100 +1,78 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using NeonTetris.Common;
+using UnityEngine.UI;
 
-public class TetrisManager : MonoBehaviour {
+public class TetrisManager : MonoBehaviour
+{
+    private static TetrisManager instance = null;
+    public static TetrisManager GetInstance
+    {
+        get
+        {
+            if (!instance)
+            {
+                instance = FindObjectOfType<TetrisManager>();
+                if (!instance)
+                {
+                    GameObject newManger = new GameObject("TetrisManager");
+                    instance = newManger.AddComponent<TetrisManager>();
+                }
+            }
+            return instance;
+        }
+    }
 
-    /// <summary>
-    /// 保存所有Brick的二维list
-    /// </summary>
     private List<List<Brick>> tile = new List<List<Brick>>();
-    /// <summary>
-    /// Brick在场景中的从属节点
-    /// </summary>
-    [SerializeField] private Transform tileTrans;
-    /// <summary>
-    /// 回合间隔时间
-    /// </summary>
-    private float tickInterval = Const.DEFAULT_TICK_INTERVAL;
-    /// <summary>
-    /// 当前的回合时间
-    /// </summary>
-    private float curTickTime = 0.0f;
-    /// <summary>
-    /// 当前的活动块
-    /// </summary>
-    private TetrisBase activeTetris;
+
+    public Button btn;
 
     private void Awake()
     {
-        InitBrick();
-        
+        if(!instance)
+        {
+            instance = this;
+            gameObject.name = "TetrisManager";
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // Use this for initialization
-    void Start () {
+    void Start()
+    {
         Initialize();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        curTickTime += Time.deltaTime;
-        if(curTickTime>=tickInterval)
-        {
-            RunTick();
-            curTickTime = 0.0f;
-        }
-	}
-    /// <summary>
-    /// 对TetrisManager类进行初始化
-    /// </summary>
-    private void Initialize()
-    {
-        tickInterval = Const.DEFAULT_TICK_INTERVAL;
-        curTickTime = 0.0f;
-    }
-    /// <summary>
-    /// 进行一个回合
-    /// </summary>
-    private void RunTick()
+
+    void Update()
     {
 
     }
-    /// <summary>
-    /// 初始化场景中所需要的所有Brick
-    /// </summary>
-    private void InitBrick()
+
+    void Initialize()
     {
         float startPosX = -(Const.BRICK_SIZE * Const.MAX_COLUMN_COUNT / 2 - Const.BRICK_SIZE / 2);
         float startPosY = -(Const.BRICK_SIZE * Const.MAX_ROW_COUNT / 2 - Const.BRICK_SIZE / 2);
-        GameObject BrickPref = Resources.Load<GameObject>(ResPath.BrickPref);
+        GameObject brickPref = Resources.Load<GameObject>(Const.BRICK_PREFAB_PATH);
+        if (!brickPref) return;
 
-        for (int i=0;i<Const.MAX_COLUMN_COUNT;i++)
+        for(int i=0;i< Const.MAX_ROW_COUNT;i++)
         {
             List<Brick> row = new List<Brick>();
-            for(int j=0;j<Const.MAX_ROW_COUNT;j++)
+            for (int j=0;j<Const.MAX_COLUMN_COUNT;j++)
             {
-                GameObject tmpBrick = Instantiate(BrickPref, tileTrans);
-                if (tmpBrick != null)
+                GameObject brick = Instantiate(brickPref, transform);
+                if(brick!=null)
                 {
-                    Brick b = tmpBrick.GetComponent<Brick>();
-                    b.CreateBrick(startPosX + Const.BRICK_SIZE * i, startPosY + Const.BRICK_SIZE * j, new Color(1.0F, 1.0F, 1.0F), true);
+                    Brick b = brick.GetComponent<Brick>();
+                    b.InitBrick(new Position(startPosX + Const.BRICK_SIZE * j, startPosY + Const.BRICK_SIZE * i), new Color(1.0F, 1.0F, 1.0F));
                     b.BrickColor = Color.blue;
                     row.Add(b);
                 }
             }
             tile.Add(row);
         }
-    }
-    /// <summary>
-    /// 检查某一砖块是否可以向某一方向移动
-    /// </summary>
-    /// <param name="b">要检查的砖块</param>
-    /// <param name="drct">要移动的方向</param>
-    /// <returns></returns>
-    bool IsMoveable(Brick b,Direction drct)
-    {
-        return false;
     }
 }
